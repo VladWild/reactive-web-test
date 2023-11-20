@@ -21,24 +21,26 @@ public class TestController {
         this.restTestService = restTestService;
     }
 
-    @GetMapping("/{delayStart}/{delayRest}/{delayEnd}")
+    @GetMapping("/{delayStart}/{delayRest}/{delayEnd}/{iter}")
     public ResponseEntity<Void> delay(@PathVariable("delayStart") Long delayStart,
                                       @PathVariable("delayRest") Long delayRest,
-                                      @PathVariable("delayEnd") Long delayEnd) throws InterruptedException {
-        sleep(delayStart, "Start");
+                                      @PathVariable("delayEnd") Long delayEnd,
+                                      @PathVariable("iter") Long iter) throws InterruptedException {
+        sleep(delayStart, "Start", iter);
         restTestService.getTest(delayRest);
-        sleep(delayEnd, "End");
+        sleep(delayEnd, "End", iter);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void sleep(long delay, String phase) throws InterruptedException {
+    private void sleep(long delay, String phase, Long iter) {
         long start = System.currentTimeMillis();
-        logger.info("{} - start delay", phase);
+        logger.info("{} - iter, {} - start delay", iter, phase);
         int i = 0;
         long endTime = delay * 1000;
         while ((System.currentTimeMillis() - start) < endTime) {
             i++;
         }
-        logger.info("{} - end delay {} ms, i = {}", phase, System.currentTimeMillis() - start, i);
+        logger.info("{} - iter, {} - end delay {} ms, i = {}",
+                iter, phase, System.currentTimeMillis() - start, i);
     }
 }

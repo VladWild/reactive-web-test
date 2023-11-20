@@ -9,19 +9,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Random;
+
 @RestController
 @RequestMapping(value = "/test")
 public class TestController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @GetMapping("/{delay}")
-    public ResponseEntity<Void> delay(@PathVariable("delay") Long delaySec) throws InterruptedException {
+    public Long delay(@PathVariable("delay") Long delaySec) throws InterruptedException {
         long start = System.currentTimeMillis();
 
         logger.info("Start delay");
         Thread.sleep(delaySec * 1000);
         logger.info("End delay {} ms", System.currentTimeMillis() - start);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return (long) (new Random().nextInt(100) + 1);
     }
 }
